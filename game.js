@@ -1481,20 +1481,24 @@
     return Promise.resolve(game.audio);
   }
 
-  // A short chiptune rendition of the opening motif of Beethoven's Symphony
-  // No. 5 (public domain), used as ambient background music in place of a
-  // recorded track.
+  // A short chiptune rendition of the 3rd-movement scherzo of Beethoven's
+  // Symphony No. 5 (public domain): a hushed rising arpeggio in the low
+  // strings, answered by the "fate" rhythm restated boldly by the horns,
+  // in the movement's bouncy triple meter. Used as ambient background
+  // music in place of a recorded track.
   const musicMotif = [
-    { freq: 392.0, start: 0.0, dur: 0.24 },
-    { freq: 392.0, start: 0.32, dur: 0.24 },
-    { freq: 392.0, start: 0.64, dur: 0.24 },
-    { freq: 311.13, start: 0.96, dur: 0.85 },
-    { freq: 349.23, start: 2.05, dur: 0.24 },
-    { freq: 349.23, start: 2.37, dur: 0.24 },
-    { freq: 349.23, start: 2.69, dur: 0.24 },
-    { freq: 293.66, start: 3.01, dur: 0.95 },
+    // quiet rising arpeggio (pp, low strings)
+    { freq: 130.81, start: 0.0, dur: 0.22, type: "triangle", gain: 0.45 },
+    { freq: 155.56, start: 0.26, dur: 0.22, type: "triangle", gain: 0.45 },
+    { freq: 196.0, start: 0.52, dur: 0.22, type: "triangle", gain: 0.45 },
+    { freq: 261.63, start: 0.78, dur: 0.3, type: "triangle", gain: 0.5 },
+    // bold horn call restating the fate rhythm (ff)
+    { freq: 392.0, start: 1.3, dur: 0.16, type: "square", gain: 1.6 },
+    { freq: 392.0, start: 1.52, dur: 0.16, type: "square", gain: 1.6 },
+    { freq: 392.0, start: 1.74, dur: 0.16, type: "square", gain: 1.6 },
+    { freq: 311.13, start: 1.96, dur: 0.55, type: "square", gain: 1.6 },
   ];
-  const musicLoopDuration = 4.3;
+  const musicLoopDuration = 3.0;
   let musicTimeoutId = null;
 
   function playMusicLoop(audio) {
@@ -1508,10 +1512,10 @@
       const noteGain = audio.createGain();
       const noteStart = loopStart + note.start;
       const noteEnd = noteStart + note.dur;
-      oscillator.type = "square";
+      oscillator.type = note.type || "square";
       oscillator.frequency.setValueAtTime(note.freq, noteStart);
       noteGain.gain.setValueAtTime(0.0001, noteStart);
-      noteGain.gain.exponentialRampToValueAtTime(1, noteStart + 0.02);
+      noteGain.gain.exponentialRampToValueAtTime(note.gain || 1, noteStart + 0.02);
       noteGain.gain.exponentialRampToValueAtTime(0.0001, noteEnd);
       oscillator.connect(noteGain);
       noteGain.connect(loopGain);
