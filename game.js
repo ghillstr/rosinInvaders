@@ -22,8 +22,6 @@
     soundButton: document.getElementById("soundButton"),
   };
   const pauseButtons = document.querySelectorAll("[data-pause-trigger]");
-  const backgroundMusic = document.getElementById("backgroundMusic");
-  backgroundMusic.volume = 1;
   const sessionId =
     window.crypto?.randomUUID?.() ||
     `ri_${Date.now().toString(36)}_${Math.random().toString(36).slice(2)}`;
@@ -1483,20 +1481,71 @@
     return Promise.resolve(game.audio);
   }
 
-  function prepareBackgroundMusic() {
-    backgroundMusic.loop = true;
-    backgroundMusic.muted = false;
-    backgroundMusic.volume = 1;
+  // A short chiptune rendition of the opening motif of Beethoven's Symphony
+  // No. 5 (public domain), used as ambient background music in place of a
+  // recorded track.
+  const musicMotif = [
+    { freq: 392.0, start: 0.0, dur: 0.24 },
+    { freq: 392.0, start: 0.32, dur: 0.24 },
+    { freq: 392.0, start: 0.64, dur: 0.24 },
+    { freq: 311.13, start: 0.96, dur: 0.85 },
+    { freq: 349.23, start: 2.05, dur: 0.24 },
+    { freq: 349.23, start: 2.37, dur: 0.24 },
+    { freq: 349.23, start: 2.69, dur: 0.24 },
+    { freq: 293.66, start: 3.01, dur: 0.95 },
+  ];
+  const musicLoopDuration = 4.3;
+  let musicTimeoutId = null;
+
+  function playMusicLoop(audio) {
+    const loopStart = audio.currentTime + 0.05;
+    const loopGain = audio.createGain();
+    loopGain.gain.value = 0.05;
+    loopGain.connect(audio.destination);
+
+    for (const note of musicMotif) {
+      const oscillator = audio.createOscillator();
+      const noteGain = audio.createGain();
+      const noteStart = loopStart + note.start;
+      const noteEnd = noteStart + note.dur;
+      oscillator.type = "square";
+      oscillator.frequency.setValueAtTime(note.freq, noteStart);
+      noteGain.gain.setValueAtTime(0.0001, noteStart);
+      noteGain.gain.exponentialRampToValueAtTime(1, noteStart + 0.02);
+      noteGain.gain.exponentialRampToValueAtTime(0.0001, noteEnd);
+      oscillator.connect(noteGain);
+      noteGain.connect(loopGain);
+      oscillator.start(noteStart);
+      oscillator.stop(noteEnd + 0.02);
+    }
+
+    musicTimeoutId = setTimeout(() => {
+      musicTimeoutId = null;
+      if (game.soundOn && game.state !== "paused" && !document.hidden) {
+        ensureAudio().then((nextAudio) => {
+          if (nextAudio && nextAudio.state === "running") playMusicLoop(nextAudio);
+        });
+      }
+    }, musicLoopDuration * 1000);
+  }
+
+  function stopMusicLoop() {
+    if (musicTimeoutId) {
+      clearTimeout(musicTimeoutId);
+      musicTimeoutId = null;
+    }
   }
 
   function syncBackgroundMusic() {
     if (!game.soundOn || game.state === "paused" || document.hidden) {
-      backgroundMusic.pause();
+      stopMusicLoop();
       return;
     }
-    prepareBackgroundMusic();
-    const playPromise = backgroundMusic.play();
-    if (playPromise) playPromise.catch(() => {});
+    if (musicTimeoutId) return;
+    ensureAudio().then((audio) => {
+      if (!audio || audio.state !== "running" || musicTimeoutId) return;
+      playMusicLoop(audio);
+    });
   }
 
   function playTone(frequency, duration, type, volume, delay = 0) {
