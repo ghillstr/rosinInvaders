@@ -1,7 +1,24 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
-  <rect x="4" y="18" width="40" height="24" rx="4" fill="#b67542"/>
-  <rect x="4" y="18" width="40" height="24" rx="4" fill="none" stroke="#5c3a1c" stroke-width="1.5"/>
-  <rect x="9" y="10" width="30" height="10" rx="2" fill="#d9a441"/>
-  <rect x="9" y="10" width="30" height="10" rx="2" fill="none" stroke="#8a6416" stroke-width="1.5"/>
-  <rect x="7" y="24" width="9" height="16" rx="2" fill="#ffffff" opacity="0.2"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 84">
+  <defs>
+    <linearGradient id="brownTop" x1="34" y1="16" x2="118" y2="42" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#d99a5e"/>
+      <stop offset="1" stop-color="#8a5225"/>
+    </linearGradient>
+    <linearGradient id="brownFront" x1="0" y1="40" x2="0" y2="68" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#c9834a"/>
+      <stop offset="1" stop-color="#6e3f1c"/>
+    </linearGradient>
+  </defs>
+
+  <ellipse cx="70" cy="79" rx="46" ry="5" fill="#000000" opacity="0.22"/>
+
+  <polygon points="106,40 128,26 128,54 106,68" fill="#5c3a1c" stroke="#3a230f" stroke-width="2" stroke-linejoin="round"/>
+  <polygon points="10,40 34,16 112,16 128,26 106,40" fill="url(#brownTop)" stroke="#3a230f" stroke-width="2" stroke-linejoin="round"/>
+  <polygon points="10,40 106,40 106,68 26,68" fill="url(#brownFront)" stroke="#3a230f" stroke-width="2" stroke-linejoin="round"/>
+
+  <polygon points="42,20 108,20 116,25 50,25" fill="#ffffff" opacity="0.4"/>
+  <line x1="34" y1="58" x2="98" y2="58" stroke="#ffffff" stroke-width="2" opacity="0.28"/>
+
+  <circle cx="40" cy="49" r="3.4" fill="#e9c79a" stroke="#5c3a1c" stroke-width="0.8"/>
+  <circle cx="90" cy="49" r="3.4" fill="#3a230f" stroke="#241608" stroke-width="0.8"/>
 </svg>
