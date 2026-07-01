@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#080b12">
+  <title>Rosin Invaders</title>
+  <meta name="description" content="Choose Winter or Summer and defend your season in this Rosin arcade game.">
+  <link rel="stylesheet" href="style.css?v=clean-v1">
+</head>
+<body>
+  <main class="game-shell">
+    <header class="masthead">
+      <p class="eyebrow">BASSMENT ROSIN PRESENTS</p>
+      <h1>ROSIN <span>INVADERS</span></h1>
+    </header>
+
+    <section class="arcade-frame" aria-label="Rosin Invaders game">
+      <div class="status-bar" aria-live="polite">
+        <div><span class="label">TIME</span><strong id="score">00:00.00</strong></div>
+        <div><span class="label">WAVE</span><strong id="wave">01</strong></div>
+        <div><span class="label">BEST</span><strong id="highScore">--:--.--</strong></div>
+        <div><span class="label">LIVES</span><strong id="lives">● ● ●</strong></div>
+      </div>
+
+      <div class="screen">
+        <canvas id="gameCanvas" aria-label="Rosin Invaders play area"></canvas>
+
+        <div class="overlay visible" id="startScreen">
+          <div class="panel">
+            <p class="panel-kicker">CHOOSE YOUR SEASON</p>
+            <h2>Pick a side.</h2>
+            <p class="intro">Choose Winter or Summer, then defend your climate against waves of rival containers.</p>
+            <div class="season-grid">
+              <button class="season-card winter" data-season="winter" type="button">
+                <span class="icon-wrap"><img src="assets/winter-icon.svg" alt=""></span>
+                <strong>WINTER</strong>
+              </button>
+              <button class="season-card summer" data-season="summer" type="button">
+                <span class="icon-wrap"><img src="assets/summer-icon.svg" alt=""></span>
+                <strong>SUMMER</strong>
+              </button>
+            </div>
+            <p class="desktop-help"><kbd>←</kbd> <kbd>→</kbd> or <kbd>A</kbd> <kbd>D</kbd> to move · Hold <kbd>SPACE</kbd> to fire</p>
+          </div>
+        </div>
+
+        <div class="overlay" id="messageScreen">
+          <div class="panel compact">
+            <p class="panel-kicker" id="messageKicker">GAME OVER</p>
+            <h2 id="messageTitle">Season defeated.</h2>
+            <p class="final-score"><span id="finalMetricLabel">SCORE</span> <strong id="finalScore">000000</strong></p>
+            <button class="primary-button" id="restartButton" type="button">PLAY AGAIN</button>
+            <button class="text-button" id="changeSeasonButton" type="button">CHANGE SEASON</button>
+          </div>
+        </div>
+
+        <div class="overlay pause-overlay" id="pauseScreen">
+          <div class="panel compact">
+            <p class="panel-kicker">INTERMISSION</p>
+            <h2>Paused</h2>
+            <button class="primary-button" id="resumeButton" type="button">RESUME</button>
+            <button class="text-button" id="startOverButton" type="button">START OVER</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="game-actions">
+        <button class="desktop-pause-button" type="button" data-pause-trigger aria-label="Pause game">PAUSE</button>
+        <button id="soundButton" type="button" aria-label="Toggle sound" aria-pressed="true">SOUND: ON</button>
+      </div>
+    </section>
+
+    <div class="touch-controls" aria-label="Touch controls">
+      <div class="move-controls">
+        <button id="leftButton" type="button" aria-label="Move left">←</button>
+        <button id="rightButton" type="button" aria-label="Move right">→</button>
+      </div>
+      <div class="play-controls">
+        <button class="pause-touch-button" id="pauseButton" type="button" data-pause-trigger aria-label="Pause game">PAUSE</button>
+      </div>
+    </div>
+  </main>
+
+  <audio
+    id="backgroundMusic"
+    src="assets/beethoven5-softer-chiptune.mp3"
+    preload="auto"
+    autoplay
+    loop
+  ></audio>
+  <script src="game.js?v=local-v1"></script>
+</body>
+</html>
